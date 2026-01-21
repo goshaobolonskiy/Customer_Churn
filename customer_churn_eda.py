@@ -11,6 +11,7 @@ print("Размер данных:", df.shape)
 print("\nПервые 5 строк:")
 print(df.head())
 print("\nИнформация о данных:")
+print(df.info())
 print("\nПропуски:")
 print(df.isnull().sum())
 print("\nОписательная статистика:")
@@ -53,25 +54,30 @@ print(corr_with_target)
 corr_matrix = df_test.corr()
 
 # Визуализация матрицы корреляций
-# sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", fmt=".2f", linewidths=0.5)
-
+sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", fmt=".2f", linewidths=0.5)
+plt.show()
 
 # Самые большие корреляции с целевой переменной
 top_features = corr_with_target.abs().sort_values(ascending=False).head(5).index
 top_correlations = corr_with_target.loc[top_features].sort_values(ascending=False)
-print(f"Топ-5 самых сильных корреляций (с сохранением знака):\n{top_correlations}")
+print(f"Топ-5 самых сильных корреляций с целевой переменной (с сохранением знака):\n{top_correlations}")
 
 # plt.title('Корреляция деятельности с оценкой')
 # plt.xlabel('Признаки')
 # plt.ylabel('Churn')
 
 # Гистограмма корреляций
-# bars = plt.bar(top_correlations.index, top_correlations.values, color='skyblue', width=0.8, edgecolor='black', alpha=0.7)
-# plt.bar_label(bars, fmt='%.3f', padding=3, fontsize=9)
+bars = plt.bar(top_correlations.index, top_correlations.values, color='skyblue', width=0.8, edgecolor='black',
+               alpha=0.7)
+plt.bar_label(bars, fmt='%.3f', padding=3, fontsize=9)
+plt.show()
 
-# Распределение целевой переменной
-# plt.hist(df["Churn"])
-
-# plt.grid(True, alpha=0.3)
-# plt.tight_layout()
-# plt.show()
+# Распределение каждой из переменной
+for i in df_test.columns:
+    plt.grid(True, alpha=0.3)
+    # plt.tight_layout()
+    plt.title(f"Распределение {i}")
+    plt.xlabel(f"Значение {i}")
+    plt.ylabel("Количество")
+    plt.hist(df[i])
+    plt.show()
